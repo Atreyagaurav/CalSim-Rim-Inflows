@@ -1357,3 +1357,37 @@ def unimpaired_11333000(df_full_gauge_data):
                                           fl_storages=[df_JNKSN_storage])
 
     return df_unimpaired
+
+
+def unimpaired_11409000(df_full_gauge_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11409000.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+
+    df_11409000 = df_full_gauge_data.loc[:, "11409000"].fillna(
+        df_full_gauge_data.loc[:, "11410000"] - df_full_gauge_data.loc[:, "11409500"]
+    )
+
+    # only until 1968
+    df_storage = df_full_gauge_data.loc[:"1968-09-30", "11407800"]
+    df_unimpaired = df_11409000 + df_full_gauge_data.loc[:, "JKSMD_evap"].fillna(0) + df_full_gauge_data.loc[:, "11408000"].fillna(0) + df_storage.diff().fillna(0)
+    # Tried to use previously defined functions to do it, but somehow it keep most of the data NaN
+    # df_unimpaired = unimpaired_flows(
+    #     df_11409000,
+    #     fl_additions=[
+    #         df_full_gauge_data.loc[:, "JKSMD_evap"].fillna(0),
+    #         df_full_gauge_data.loc[:, "11408000"].fillna(0)
+    #     ],
+    #     fl_storages = [df_storage]
+    #     )
+    return df_unimpaired

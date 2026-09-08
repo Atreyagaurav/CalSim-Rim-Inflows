@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from extension_functions import create_final_flow_plots, area_scale, remove_negatives_timeseries, unimpaired_flows
+from extension_functions import create_final_flow_plots, area_scale, remove_negatives_timeseries, unimpaired_flows, s_curve_disaggregation, monthly_to_timeseries
 from datetime import datetime
 
 def I_DCC010(df_extended_data, df_rim_inflows):
@@ -2262,3 +2262,48 @@ def I_DEE023(df_11335700, df_rim_inflows):
 
     # create the plots to compare the observed vs synthetic data
     create_final_flow_plots(df_location, list(range(1922, 2025)), 'I_DEE023')
+
+
+def I_NFY029(df_extended_data, df_unimpaired_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_SFM005
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_unimpaired_data: dataframe
+        Dataframe of the unimpaired data to pull from
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    input_usgs = ["11411500", "11412000", "11412500"]
+    df_1 = df_extended_data.loc[:"1930-09-30", input_usgs].sum(axis=1) * 1.029
+    df_2 = df_extended_data.loc["1930-10-31":, "11413000"]
+
+    df_location = pd.concat([
+        df_1, 
+        df_2
+    ])
+
+    df_unimpaired = df_unimpaired_data["11409000"]
+    df_out, df_synt_out = s_curve_disaggregation(df_unimpaired, df_2, 1922, 1968, 1939, 2021)
+    
+    df_synthetic = monthly_to_timeseries(df_synt_out).TAF
+    df_location.fillna(monthly_to_timeseries(df_synt_out).TAF, inplace = True)
+    
+    # round to 2 decimals
+    df_location = df_location.round(2)
+
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_NFY029'] = df_location
+
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1922, 2025)), 'I_NFY029')
