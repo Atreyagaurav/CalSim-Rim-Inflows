@@ -1,10 +1,12 @@
 from extension_functions import *
 from unimpairment_functions import *
 from rim_inflow_functions import *
-from evaporation_functions import calc_evap_JKSMD
+from evaporation_functions import *
 
 if __name__ == "__main__":
     i_final_year = 2021
+
+    calculate_range = pd.date_range("1921-10-31", f"{i_final_year}-09-30", freq="ME")
 
     # this holds the already extended evap rates
     s_evap_dss_path = r"./Inputs/evaporation_rates.dss"
@@ -26,6 +28,8 @@ if __name__ == "__main__":
 
     # calculate the evaporation amounts for all of our reservoirs
     calc_evap_JKSMD(s_evap_dss_path, df_full_data)
+    calc_evap_BOWMN(s_evap_dss_path, df_full_data)
+    calc_evap_FRNCH(s_evap_dss_path, df_full_data)
 
     df_full_data.to_csv('./Intermediate/feather_yuba_full_gauge_data_wevap.csv')
 
@@ -35,7 +39,7 @@ if __name__ == "__main__":
     print("Calculating unimpaired flows...")
 
     df_unimpaired_data['11409000'] = unimpaired_11409000(df_full_data)
-
+    # unimpaired_flow.loc[(df_unimpaired_data['11409000'] - unimpaired_flow) < -0.2]
     # drop the first row which is only for calculating storage differences
     df_unimpaired_data.drop(index=df_unimpaired_data.index[0], inplace=True)
 
@@ -54,7 +58,7 @@ if __name__ == "__main__":
     print("Extending flows...")
 
     # extend all with the s-curve disaggregation
-    # extend_data(df_full_data['AMF'], df_full_data['11446000'], df_extended_data, df_synthetic_data, 1944, 1959, False, '11446000', i_final_year=i_final_year)
+    # extend_data(df_unimpaired_data['11409000'], df_full_data['11446000'], df_extended_data, df_synthetic_data, 1944, 1959, False, '11446000', i_final_year=i_final_year)
 
     # # save to csv
     # df_extended_data.to_csv('./Intermediate/feather_yuba_extended_data.csv')
@@ -68,6 +72,14 @@ if __name__ == "__main__":
     print("Calculating rim inflows...")
     I_NFY029(df_full_data, df_unimpaired_data, df_rim_inflows)
     
+    df_unimpaired_data['11416500'] = unimpaired_11416500(df_full_data, df_rim_inflows).loc[calculate_range]
+    
+    df_pos_unimpaired_data = remove_negatives_timeseries(df_unimpaired_data)
+    
+    I_BOWMN(df_pos_unimpaired_data, df_rim_inflows)
+
+    # We have one extra date at the beginning for storage
+    df_rim_inflows = df_rim_inflows.loc[calculate_range]
     df_rim_inflows.to_csv('./Outputs/feather_yuba_rim_inflows.csv')
 
     # Comparison with Previous Rim Inflow dataset

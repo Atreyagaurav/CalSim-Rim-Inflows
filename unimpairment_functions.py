@@ -1,5 +1,5 @@
 import pandas as pd
-from extension_functions import unimpaired_flows, get_diversions, sum_if_all_not_nan
+from extension_functions import unimpaired_flows, get_diversions, sum_if_all_not_nan, s_curve_disaggregation, monthly_to_timeseries
 import numpy as np
 from datetime import datetime
 
@@ -1379,15 +1379,68 @@ def unimpaired_11409000(df_full_gauge_data):
     )
 
     # only until 1968
-    df_storage = df_full_gauge_data.loc[:"1968-09-30", "11407800"]
-    df_unimpaired = df_11409000 + df_full_gauge_data.loc[:, "JKSMD_evap"].fillna(0) + df_full_gauge_data.loc[:, "11408000"].fillna(0) + df_storage.diff().fillna(0)
-    # Tried to use previously defined functions to do it, but somehow it keep most of the data NaN
-    # df_unimpaired = unimpaired_flows(
-    #     df_11409000,
-    #     fl_additions=[
-    #         df_full_gauge_data.loc[:, "JKSMD_evap"].fillna(0),
-    #         df_full_gauge_data.loc[:, "11408000"].fillna(0)
-    #     ],
-    #     fl_storages = [df_storage]
-    #     )
+    df_storage = df_full_gauge_data.loc[:, "11407800_STOR_I_NFY029"]
+    
+    df_unimpaired = unimpaired_flows(
+        df_11409000,
+        fl_additions=[
+            df_full_gauge_data.loc[:, "JKSMD_evap"].fillna(0),
+            df_full_gauge_data.loc[:, "11408000"].fillna(0)
+        ],
+        # Gaurav: we should not fill storage with 0, we should do df_storage.diff().fillna(0)
+        fl_storages = [df_storage.fillna(0)]
+        )
+    return df_unimpaired
+
+
+def unimpaired_11416500(df_full_gauge_data, df_rim_inflows):
+    """
+     Calculate the unimpaired flow from of USGS gage 11416500.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+
+    df_11416500 = df_full_gauge_data.loc[:, "11416500"]
+
+    stor_Bowman = df_full_gauge_data.loc[:, "11415500_STOR"]
+    stor_French = df_full_gauge_data.loc[:, "11414400_STOR_I_BOWMN"]
+    stor_Faucherie = df_full_gauge_data.loc[:, "11414440_STOR_I_BOWMN"]
+    stor_Sawmill = df_full_gauge_data.loc[:, "11414465_STOR_I_BOWMN"]
+    
+    evap_Bowman = df_full_gauge_data.loc[:, 'BOWMN_evap']
+    evap_French = df_full_gauge_data.loc[:, 'FRNCH_evap']
+
+    # This needs restructuring
+    df_i_nfy029 =  df_rim_inflows.loc[:, "I_NFY029"]
+    # WILSON CREEK FROM NID'S DAILY DATA
+    df_wilson_creek = df_full_gauge_data.loc[:, "WILSON_CREEK"]
+    df_modelB, df_wilson_scaled = s_curve_disaggregation(df_i_nfy029, df_wilson_creek, 1922, 2021, 1976, 2004)
+    df_modelB = monthly_to_timeseries(df_modelB).loc[:, "TAF"]
+
+    df_unimpaired = unimpaired_flows(
+        df_11416500,
+        fl_additions=[
+            df_full_gauge_data.loc[:, "11416000"].clip(lower=0).fillna(0),
+            evap_Bowman.fillna(0),
+            evap_French.fillna(0),
+        ],
+        fl_subtractions = [
+            (df_full_gauge_data.loc[:, "11408000"] - df_modelB).clip(lower=0).fillna(0)
+        ],
+        # Gaurav: we should not fill storage with 0, we should do df_storage.diff().fillna(0)
+        fl_storages = [
+            stor_Bowman.fillna(0),
+            stor_French.fillna(0),
+            stor_Faucherie.fillna(0),
+            stor_Sawmill.fillna(0)
+        ]
+        )
     return df_unimpaired
