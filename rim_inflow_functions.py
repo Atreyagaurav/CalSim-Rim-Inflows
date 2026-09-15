@@ -2283,9 +2283,9 @@ def I_NFY029(df_extended_data, df_full_gauge_data, df_unimpaired_data, df_rim_in
     """
     df_location = df_extended_data["11413000"].copy(deep=True)
     # excel replaces data before 1930 by sum of these
-    input_usgs = ["11411500", "11412000", "11412500"]
-    df_1 = df_full_gauge_data.loc["1921-10-31":"1930-09-30", input_usgs].sum(axis=1) * 1.029
-    df_location.loc[df_1.index] = df_1
+    sl_input_usgs = ["11411500", "11412000", "11412500"]
+    df_sum_inputs = df_full_gauge_data.loc["1921-10-31":"1930-09-30", sl_input_usgs].sum(axis=1) * 1.029
+    df_location.loc[df_sum_inputs.index] = df_sum_inputs
     df_location.loc["1930-10":] = df_full_gauge_data.loc["1930-10":, "11413000"]
     df_location.loc["1937-10":"1938-09"] = df_extended_data.loc["1937-10":"1938-09", "11413000"]
     # round to 2 decimals
@@ -2320,15 +2320,15 @@ def I_BOWMN(df_extended_data, df_rim_inflows):
     # set anything negative to zero.
     df_location.loc[df_location < 0] = 0
     # round to 2 decimals
-    df_bowman = 0.83 * df_location
+    df_bowmn = 0.83 * df_location
     df_frnch = 0.17 * df_location
-    df_bowman = df_bowman.round(2)
+    df_bowmn = df_bowmn.round(2)
     df_frnch = df_frnch.round(2)
 
     # add into the rim inflow dataframe
-    df_rim_inflows['I_BOWMN'] = df_bowman
+    df_rim_inflows['I_BOWMN'] = df_bowmn
     df_rim_inflows['I_FRNCH'] = df_frnch
 
     # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_bowman, list(range(1922, 2021)), 'I_BOWMN')
+    create_final_flow_plots(df_bowmn, list(range(1922, 2021)), 'I_BOWMN')
     create_final_flow_plots(df_frnch, list(range(1922, 2021)), 'I_FRNCH')

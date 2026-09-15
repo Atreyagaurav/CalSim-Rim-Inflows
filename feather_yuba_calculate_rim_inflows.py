@@ -6,8 +6,8 @@ from evaporation_functions import *
 if __name__ == "__main__":
     i_final_year = 2021
 
-    storage_range = pd.date_range("1921-09-30", f"{i_final_year}-09-30", freq="ME")
-    calculate_range = pd.date_range("1921-10-31", f"{i_final_year}-09-30", freq="ME")
+    ti_storage_range = pd.date_range("1921-09-30", f"{i_final_year}-09-30", freq="ME")
+    ti_calculate_range = pd.date_range("1921-10-31", f"{i_final_year}-09-30", freq="ME")
 
     # this holds the already extended evap rates
     s_evap_dss_path = r"./Inputs/evaporation_rates.dss"
@@ -35,14 +35,14 @@ if __name__ == "__main__":
     df_full_data.to_csv('./Intermediate/feather_yuba_full_gauge_data_wevap.csv')
 
     ### unimpairing the data
-    df_unimpaired_data = pd.DataFrame(index=storage_range)
+    df_unimpaired_data = pd.DataFrame(index=ti_storage_range)
 
     print("Calculating unimpaired flows...")
 
     df_unimpaired_data['11409000'] = unimpaired_11409000(df_full_data)
-    # unimpaired_flow.loc[(df_unimpaired_data['11409000'] - unimpaired_flow) < -0.2]
-    # drop the first row which is only for calculating storage differences
-    df_unimpaired_data.drop(index=df_unimpaired_data.index[0], inplace=True)
+
+    # drop the first row used for storage
+    df_unimpaired_data = df_unimpaired_data.loc[ti_calculate_range,:]
 
     # save to csv
     df_unimpaired_data.to_csv('./Intermediate/feather_yuba_unimpaired_data.csv')
@@ -53,38 +53,37 @@ if __name__ == "__main__":
     # save to csv
     df_pos_unimpaired_data.to_csv('./Intermediate/feather_yuba_unimpaired_data_pos.csv')
 
-    df_extended_data = pd.DataFrame(index=storage_range)
-    df_synthetic_data = pd.DataFrame(index=storage_range)
+    df_extended_data = pd.DataFrame(index=ti_storage_range)
+    df_synthetic_data = pd.DataFrame(index=ti_storage_range)
 
     print("Extending flows...")
-    # extend all with the s-curve disaggregation
-    # extend_data(df_unimpaired_data['11409000'], df_full_data['11446000'], df_extended_data, df_synthetic_data, 1944, 1959, False, '11446000', i_final_year=i_final_year)
+    # extend some with the s-curve disaggregation
     extend_data(df_unimpaired_data['11409000'], df_full_data['11413000'], df_extended_data, df_synthetic_data, 1939, 2021, False, '11413000', i_x_start_year=1922, i_final_year=1968)
 
     # final rim inflows
-    df_rim_inflows = pd.DataFrame(index=storage_range)
+    df_rim_inflows = pd.DataFrame(index=ti_storage_range)
     
     print("Calculating rim inflows...")
     # This is input to other nodes so we need it before others
     I_NFY029(df_extended_data, df_full_data, df_unimpaired_data, df_rim_inflows)
     
+    # extend some with the s-curve disaggregation that depend on rim inflows
     extend_data(df_rim_inflows["I_NFY029"], df_full_data.loc[:, "WILSON_CREEK"], df_extended_data, df_synthetic_data, 1976, 2004, False, 'WILSON_CREEK', i_x_start_year=1922, i_final_year=i_final_year)
-    # this depends on WILSON CREEK
-    df_unimpaired_data['11416500'] = unimpaired_11416500(df_full_data, df_extended_data).loc[calculate_range]
+    # this unimpaired depends on WILSON CREEK
+    df_unimpaired_data['11416500'] = unimpaired_11416500(df_full_data, df_extended_data).loc[ti_calculate_range]
     df_pos_unimpaired_data = remove_negatives_timeseries(df_unimpaired_data)
     
     extend_data(df_rim_inflows["I_NFY029"], df_pos_unimpaired_data["11416500"], df_extended_data, df_synthetic_data, 1928, i_final_year, False, '11416500', i_x_start_year=1922, i_final_year=i_final_year)
     
-    
     # # save to csv
-    # df_extended_data.to_csv('./Intermediate/feather_yuba_extended_data.csv')
-    # df_synthetic_data.to_csv('./Intermediate/feather_yuba_synthetic_data.csv')
+    df_extended_data.to_csv('./Intermediate/feather_yuba_extended_data.csv')
+    df_synthetic_data.to_csv('./Intermediate/feather_yuba_synthetic_data.csv')
 
     # this function also calculates I_FRNCH
     I_BOWMN(df_extended_data, df_rim_inflows)
 
     # We have one extra date at the beginning for storage
-    df_rim_inflows = df_rim_inflows.loc[calculate_range]
+    df_rim_inflows = df_rim_inflows.loc[ti_calculate_range]
     df_rim_inflows.to_csv('./Outputs/feather_yuba_rim_inflows.csv')
 
     # Comparison with Previous Rim Inflow dataset

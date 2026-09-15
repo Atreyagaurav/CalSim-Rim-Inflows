@@ -105,8 +105,13 @@ def calculate_evap_data(df_storage_data, df_evap_rates, df_area_capacity, b_set_
             df_evaporation_data.loc[index, 'TAF'] = 0
 
         else:
-            # linearly interpolate the capacities to get the area value for the current capacity. units are acres here
-            # This returns fp[-1] for x > xp[-1].
+            # linearly interpolate the capacities to get the area
+            # value for the current capacity. units are acres here
+
+            # TODO: from numpy This returns fp[-1] for x > xp[-1],
+            # which means it does not extrapolate outside range, but
+            # exce FORECAST function does, we might have to change it
+            # to make it the same
             d_pred_area = np.interp(row['Averages'], df_area_capacity['Capacity'], df_area_capacity['Area'])
 
             # multiply by the evap rate
