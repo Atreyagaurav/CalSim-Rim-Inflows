@@ -1393,7 +1393,7 @@ def unimpaired_11409000(df_full_gauge_data):
     return df_unimpaired
 
 
-def unimpaired_11416500(df_full_gauge_data, df_rim_inflows):
+def unimpaired_11416500(df_full_gauge_data, df_extended_data):
     """
      Calculate the unimpaired flow from of USGS gage 11416500.
      Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
@@ -1402,6 +1402,8 @@ def unimpaired_11416500(df_full_gauge_data, df_rim_inflows):
      ----------
      df_full_gauge_data: dataframe
        Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     df_extended_data: dataframe
+       Dataframe of the extended data to pull from
      Returns
      -------
      df_unimpaired: dataframe
@@ -1418,13 +1420,7 @@ def unimpaired_11416500(df_full_gauge_data, df_rim_inflows):
     evap_Bowman = df_full_gauge_data.loc[:, 'BOWMN_evap']
     evap_French = df_full_gauge_data.loc[:, 'FRNCH_evap']
 
-    # This needs restructuring
-    df_i_nfy029 =  df_rim_inflows.loc[:, "I_NFY029"]
-    # WILSON CREEK FROM NID'S DAILY DATA
-    df_wilson_creek = df_full_gauge_data.loc[:, "WILSON_CREEK"]
-    df_modelB, df_wilson_scaled = s_curve_disaggregation(df_i_nfy029, df_wilson_creek, 1922, 2021, 1976, 2004)
-    df_modelB = monthly_to_timeseries(df_modelB).loc[:, "TAF"]
-
+    df_modelB = df_extended_data.loc[:, "WILSON_CREEK"]
     df_unimpaired = unimpaired_flows(
         df_11416500,
         fl_additions=[

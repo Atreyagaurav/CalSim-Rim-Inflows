@@ -106,6 +106,7 @@ def calculate_evap_data(df_storage_data, df_evap_rates, df_area_capacity, b_set_
 
         else:
             # linearly interpolate the capacities to get the area value for the current capacity. units are acres here
+            # This returns fp[-1] for x > xp[-1].
             d_pred_area = np.interp(row['Averages'], df_area_capacity['Capacity'], df_area_capacity['Area'])
 
             # multiply by the evap rate

@@ -2264,7 +2264,7 @@ def I_DEE023(df_11335700, df_rim_inflows):
     create_final_flow_plots(df_location, list(range(1922, 2025)), 'I_DEE023')
 
 
-def I_NFY029(df_extended_data, df_unimpaired_data, df_rim_inflows):
+def I_NFY029(df_extended_data, df_full_gauge_data, df_unimpaired_data, df_rim_inflows):
     """
     Calculate the final rim inflow for CalSim. Location: I_NFY029
 
@@ -2281,21 +2281,13 @@ def I_NFY029(df_extended_data, df_unimpaired_data, df_rim_inflows):
     -------
     None
     """
+    df_location = df_extended_data["11413000"].copy(deep=True)
+    # excel replaces data before 1930 by sum of these
     input_usgs = ["11411500", "11412000", "11412500"]
-    df_1 = df_extended_data.loc[:"1930-09-30", input_usgs].sum(axis=1) * 1.029
-    df_2 = df_extended_data.loc["1930-10-31":, "11413000"]
-
-    df_location = pd.concat([
-        df_1, 
-        df_2
-    ])
-
-    df_unimpaired = df_unimpaired_data["11409000"]
-    df_out, df_synt_out = s_curve_disaggregation(df_unimpaired, df_2, 1922, 1968, 1939, 2021)
-    # only use it to fill missing years, there is discontinuous data
-    df_synthetic = monthly_to_timeseries(df_synt_out).TAF
-    df_location.fillna(monthly_to_timeseries(df_synt_out).TAF, inplace = True)
-    
+    df_1 = df_full_gauge_data.loc["1921-10-31":"1930-09-30", input_usgs].sum(axis=1) * 1.029
+    df_location.loc[df_1.index] = df_1
+    df_location.loc["1930-10":] = df_full_gauge_data.loc["1930-10":, "11413000"]
+    df_location.loc["1937-10":"1938-09"] = df_extended_data.loc["1937-10":"1938-09", "11413000"]
     # round to 2 decimals
     df_location = df_location.round(2)
 
@@ -2309,7 +2301,7 @@ def I_NFY029(df_extended_data, df_unimpaired_data, df_rim_inflows):
     create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_NFY029')
 
 
-def I_BOWMN(df_unimpaired_data, df_rim_inflows):
+def I_BOWMN(df_extended_data, df_rim_inflows):
     """
     Calculate the final rim inflow for CalSim. Location: I_BOWMN
 
@@ -2317,8 +2309,6 @@ def I_BOWMN(df_unimpaired_data, df_rim_inflows):
     ----------
     df_extended_data: dataframe
         Dataframe of the extended data to pull from
-    df_unimpaired_data: dataframe
-        Dataframe of the unimpaired data to pull from
     df_rim_inflows: dataframe
         Dataframe of rim inflows that have been calculated already
 
@@ -2326,11 +2316,7 @@ def I_BOWMN(df_unimpaired_data, df_rim_inflows):
     -------
     None
     """
-    df_i_nfy029 = df_rim_inflows["I_NFY029"]
-    df_unimpaired = df_unimpaired_data["11416500"]
-    df_location, df_synt_out = s_curve_disaggregation(df_i_nfy029, df_unimpaired, 1922, 2021, 1928, 2021)
-    
-    df_location = monthly_to_timeseries(df_location).loc[:, "TAF"]
+    df_location = df_extended_data["11416500"]
     # set anything negative to zero.
     df_location.loc[df_location < 0] = 0
     # round to 2 decimals
@@ -2338,7 +2324,6 @@ def I_BOWMN(df_unimpaired_data, df_rim_inflows):
     df_frnch = 0.17 * df_location
     df_bowman = df_bowman.round(2)
     df_frnch = df_frnch.round(2)
-
 
     # add into the rim inflow dataframe
     df_rim_inflows['I_BOWMN'] = df_bowman
