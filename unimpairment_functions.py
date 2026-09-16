@@ -1,5 +1,5 @@
 import pandas as pd
-from extension_functions import unimpaired_flows, get_diversions, sum_if_all_not_nan, s_curve_disaggregation, monthly_to_timeseries
+from extension_functions import unimpaired_flows, get_diversions, sum_if_all_not_nan, s_curve_disaggregation, monthly_to_timeseries, remove_negatives_timeseries
 import numpy as np
 from datetime import datetime
 
@@ -1440,3 +1440,60 @@ def unimpaired_11416500(df_full_gauge_data, df_extended_data):
         ]
         )
     return df_unimpaired
+
+
+def unimpaired_11409400(df_full_gauge_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11409400.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    df_unimp_11409400 = unimpaired_flows(
+        df_full_gauge_data.loc[:, "11409400"],
+        fl_additions=[
+            df_full_gauge_data.loc[:, "11409350"].clip(lower=0).fillna(0)
+        ],
+        fl_subtractions = [
+            df_full_gauge_data.loc[:, "11408870"].clip(lower=0).fillna(0)
+        ],
+    )
+    return df_unimp_11409400
+
+
+def unimpaired_11409400_ext(df_full_gauge_data, df_extended_data, df_unimpaired_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11409400 again.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     df_extended_data: dataframe
+       Dataframe of the extended data to pull from
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    df_unimp_11409400_ex = df_unimpaired_data["11409400"].copy(deep=True)
+    ii_water_yr = df_full_gauge_data.index.map(lambda i: i.year + int(i.month>9))
+    # TODO: copied this from excel, might have to calculate it?
+    dl_corr_values = (
+        0.830444791508848 * df_full_gauge_data.loc[:, "11409500"].groupby(ii_water_yr).sum()
+        - 1.15959919555159
+    )
+    df_water_yr_ratios = dl_corr_values / df_full_gauge_data.loc[:, "11409500"].groupby(ii_water_yr).sum()
+    df_unimp_ex = df_full_gauge_data.loc[:, "11409500"] * ii_water_yr.map(df_water_yr_ratios)
+    df_unimp_11409400_ex.loc[:"1968-09"] = df_unimp_ex.loc[:"1968-09"]
+    df_unimp_11409400_ex.loc["1995-10":"1996-09"] = df_extended_data.loc["1995-10":"1996-09", "11409400"]
+    return df_unimp_11409400_ex
+

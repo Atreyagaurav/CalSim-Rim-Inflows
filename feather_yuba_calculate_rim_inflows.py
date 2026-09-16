@@ -40,6 +40,7 @@ if __name__ == "__main__":
     print("Calculating unimpaired flows...")
 
     df_unimpaired_data['11409000'] = unimpaired_11409000(df_full_data)
+    df_unimpaired_data['11409400'] = unimpaired_11409400(df_full_data)
 
     # drop the first row used for storage
     df_unimpaired_data = df_unimpaired_data.loc[ti_calculate_range,:]
@@ -59,13 +60,19 @@ if __name__ == "__main__":
     print("Extending flows...")
     # extend some with the s-curve disaggregation
     extend_data(df_unimpaired_data['11409000'], df_full_data['11413000'], df_extended_data, df_synthetic_data, 1939, 2021, False, '11413000', i_x_start_year=1922, i_final_year=1968)
+    extend_data(df_full_data.loc[:, "11409300"], df_unimpaired_data['11409400'], df_extended_data, df_synthetic_data, 1969, 1995, False, '11409400', i_x_start_year=1968, i_final_year=2000)
 
+    # this depends on the extension after the first round of unimpaired calculation
+    df_unimpaired_data['11409400_EXT'] = unimpaired_11409400_ext(df_full_data, df_extended_data, df_unimpaired_data)
+    df_pos_unimpaired_data = remove_negatives_timeseries(df_unimpaired_data)
+    
     # final rim inflows
     df_rim_inflows = pd.DataFrame(index=ti_storage_range)
     
     print("Calculating rim inflows...")
     # This is input to other nodes so we need it before others
     I_NFY029(df_extended_data, df_full_data, df_unimpaired_data, df_rim_inflows)
+    I_OGN005(df_pos_unimpaired_data, df_rim_inflows)
     
     # extend some with the s-curve disaggregation that depend on rim inflows
     extend_data(df_rim_inflows["I_NFY029"], df_full_data.loc[:, "WILSON_CREEK"], df_extended_data, df_synthetic_data, 1976, 2004, False, 'WILSON_CREEK', i_x_start_year=1922, i_final_year=i_final_year)
