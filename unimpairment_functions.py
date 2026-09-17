@@ -1497,3 +1497,93 @@ def unimpaired_11409400_ext(df_full_gauge_data, df_extended_data, df_unimpaired_
     df_unimp_11409400_ex.loc["1995-10":"1996-09"] = df_extended_data.loc["1995-10":"1996-09", "11409400"]
     return df_unimp_11409400_ex
 
+
+def unimpaired_11422500(df_full_gauge_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11422500.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    df_unimp_11422500 = unimpaired_flows(
+        df_full_gauge_data.loc[:, "11422500"],
+        fl_additions=[
+            df_full_gauge_data.loc[:, 'RLLNS_evap'].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "11422000"],
+            df_full_gauge_data.loc[:, "YB-184"].fillna(
+                pd.DataFrame({
+                    "a": df_full_gauge_data.loc[:, "11421725"],
+                    "b": df_full_gauge_data.loc[:, "TOWLE_CANAL"] + df_full_gauge_data.loc[:, "11421720"]
+                }).max(axis=1)
+            )
+        ],
+        fl_subtractions = [
+            (df_full_gauge_data.loc[:, "11414200"] -  df_full_gauge_data.loc[:, "11414205_I_RLLNS"] / (1 - 0.125)).clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "11414170"] * (1 - 0.078),
+            df_full_gauge_data.loc[:, "11426190"]
+        ],
+        fl_storages = [
+            df_full_gauge_data.loc[:, "11421800_STOR_I_RLLNS"].fillna(0)
+        ]
+    )
+    return df_unimp_11422500
+
+
+def unimpaired_11424000(df_full_gauge_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11424000.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    df_DS_CanalSpills = df_full_gauge_data.loc[:, "DS_CANAL_SPILLS_I_RLLNS"].clip(lower=0).fillna(0)
+    df_DS_CanalSpills.loc[:"2004-03"] = df_full_gauge_data.loc[:"2004-03", "DC-145"].clip(lower=0).fillna(0) * 0.6
+    df_unimp_11424000 = unimpaired_flows(
+        pd.DataFrame({
+            "a": df_full_gauge_data.loc[:, "11424000"],
+            "b": df_full_gauge_data.loc[:, "11423500"] * 1.05 - df_full_gauge_data.loc[:, "CFWID_DIVERSIONS"]
+        }).max(axis=1),
+        fl_additions=[
+            df_full_gauge_data.loc[:, "CMPFW_evap"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "CMBIE_evap"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "RLLNS_evap"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "NID_COMBIE_DIVERSIONS"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "CFWID_DIVERSIONS"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "SSWD_DIVERSIONS"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "TARR_DITCH"].clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "11422000"],
+            df_full_gauge_data.loc[:, "YB-184"].fillna(
+                pd.DataFrame({
+                    "a": df_full_gauge_data.loc[:, "11421725"],
+                    "b": df_full_gauge_data.loc[:, "TOWLE_CANAL"] + df_full_gauge_data.loc[:, "11421720"]
+                }).max(axis=1)
+            )
+        ],
+        fl_subtractions = [
+            df_DS_CanalSpills,
+            ((df_full_gauge_data.loc[:, "DC-145"] - df_DS_CanalSpills).clip(lower=0).fillna(0) + df_full_gauge_data.loc[:, "DC-102"])*0.2*0.85,
+            (df_full_gauge_data.loc[:, "11414200"] -  df_full_gauge_data.loc[:, "11414205_I_RLLNS"] / (1 - 0.125)).clip(lower=0).fillna(0),
+            df_full_gauge_data.loc[:, "11414170"] * (1 - 0.078),
+            df_full_gauge_data.loc[:, "11426190"]
+        ],
+        fl_storages = [
+            df_full_gauge_data.loc[:, "LAKE_COMBIE_STOR_I_RLLNS"].fillna(0),
+            df_full_gauge_data.loc[:, "CAMP_FAR_STOR_I_RLLNS"].fillna(0),
+            df_full_gauge_data.loc[:, "11421800_STOR_I_RLLNS"].fillna(0)
+        ]
+    )
+    return df_unimp_11424000

@@ -2336,12 +2336,10 @@ def I_BOWMN(df_extended_data, df_rim_inflows):
 
 def I_OGN005(df_unimpaired_data, df_rim_inflows):
     """
-    Calculate the final rim inflow for CalSim. Location: I_BOWMN
+    Calculate the final rim inflow for CalSim. Location: I_OGN005
 
     Parameters
     ----------
-    df_extended_data: dataframe
-        Dataframe of the extended data to pull from
     df_unimpaired_data: dataframe
         Dataframe of the unimpaired data to pull from
     df_rim_inflows: dataframe
@@ -2361,3 +2359,32 @@ def I_OGN005(df_unimpaired_data, df_rim_inflows):
     df_rim_inflows['I_OGN005'] = df_location
     # create the plots to compare the observed vs synthetic data
     create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_OGN005')
+
+
+def I_RLLNS(df_extended_data, df_unimpaired_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_RLLNS
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_unimpaired_data: dataframe
+        Dataframe of the unimpaired data to pull from
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    df_location = df_extended_data["11422500"].copy(deep=True)
+    df_location.loc["1950-10":"1953-09"] = df_unimpaired_data.loc["1950-10":"1953-09", "11422500"]
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+    df_location = df_location.round(2)
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_RLLNS'] = df_location
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_RLLNS')

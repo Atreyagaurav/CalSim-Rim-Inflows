@@ -11,6 +11,34 @@ import urllib.error, urllib.request
 import os
 
 
+def vba_like_factor_calc_I_RLLNS(df_xcum, dl_tcum, dl_scum):
+    df_sncum = np.empty_like(df_xcum)
+    dl_prev_sncum = np.array([np.nan for _ in  range(df_xcum.shape[1])])
+    for i_row in range(df_xcum.shape[0]):
+        d_prev_value = np.nan
+        for i_col in range(df_xcum.shape[1]):
+            d_target = df_xcum.iloc[i_row, i_col]
+            dl_matches = np.where(d_target <= dl_tcum[1:])[0]
+            if len(dl_matches) or d_target == 1:
+                i_index = dl_matches[0] + 1
+                d_denom = dl_tcum[i_index] - dl_tcum[i_index - 1]
+                if d_denom == 0:
+                    d_factor = (d_target - dl_tcum[i_index - 1]) / (d_denom + 1e-6)
+                else:
+                    d_factor = (d_target - dl_tcum[i_index - 1]) / d_denom
+                dl_sncum = dl_scum[i_index-1] + d_factor * (dl_scum[i_index] - dl_scum[i_index-1])
+                dl_prev_sncum[i_col] = dl_sncum
+            else:
+                # VBA behaviour: reuse previous FACTOR and SNCUM because it skips the loop
+                dl_sncum = dl_prev_sncum[i_col]
+            df_sncum[i_row, i_col] = dl_sncum
+    return pd.DataFrame(
+        df_sncum,
+        index=df_xcum.index,
+        columns=df_xcum.columns
+    )
+
+
 def s_curve_disaggregation(df_x_data, df_y_data, i_x_start_year, i_x_end_year, i_y_start_year,
                            i_y_end_year, b_use_all_y=False, s_strange_sheet=''):
     """
@@ -121,6 +149,16 @@ def s_curve_disaggregation(df_x_data, df_y_data, i_x_start_year, i_x_end_year, i
     # now use these factors get df_y_cumulative_proportions by doing the reverse of that operation but with dl_y_avg_cumulative_proportions instead of dl_x_avg_cumulative_proportions
     # these are the scaled version of the df_x_cumulative_proportions numbers
     df_y_cumulative_proportions = dl_y_avg_cumulative_proportions[il_indices- 1] + df_factors * (dl_y_avg_cumulative_proportions[il_indices] - dl_y_avg_cumulative_proportions[il_indices- 1])
+
+    # TODO BUG FIX LATER
+    # I_RLLNS has negatives values and the VBA code there has a bug
+    # that makes it reuse values from last iteration instead of using the maximum value
+    # The line below fails because TNCUM(K) is > 1 which means > 14 not = 14 (fixing it
+    # matches the excel with python, but we can't change excel in this step)
+    # MODELB VBA Code Line 70:
+    # If (TNCUM(K) <= TCUM(N)) Or (TNCUM(K) + N = 14) Then
+    if s_strange_sheet == "RLLNS":
+        df_y_cumulative_proportions = vba_like_factor_calc_I_RLLNS(df_x_cumulative_proportions, dl_x_avg_cumulative_proportions, dl_y_avg_cumulative_proportions)
 
     # now we will fit a linear regression on all the data we have y data for even if it's larger than the y window
     # first get the year totals

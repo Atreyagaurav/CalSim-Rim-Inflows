@@ -209,6 +209,7 @@ if __name__ == "__main__":
 
         # calculate differences
         df_diffs = abs(df_reference[df_rim_inflows.columns] - df_rim_inflows).max().to_frame('Max Difference')
+        df_diffs['Na Values'] = df_rim_inflows.isna().sum()
         df_diffs['Median Value - Original'] = df_reference[df_rim_inflows.columns].mean()
         df_diffs['Max Percent Difference'] = (abs(df_reference[df_rim_inflows.columns] - df_rim_inflows)).max() / df_reference[df_rim_inflows.columns].mean()*100
 
