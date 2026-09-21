@@ -29,11 +29,17 @@ if __name__ == "__main__":
 
     # calculate the evaporation amounts for all of our reservoirs
     calc_evap_JKSMD(s_evap_dss_path, df_full_data)
+    # two versions of evap data calculation: the NFY029 seems to use shorter table than JKSMD sheet
+    calc_evap_JKSMD_I_NFY029(s_evap_dss_path, df_full_data)
     calc_evap_BOWMN(s_evap_dss_path, df_full_data)
     calc_evap_FRNCH(s_evap_dss_path, df_full_data)
     calc_evap_RLLNS(s_evap_dss_path, df_full_data)
     calc_evap_CMBIE(s_evap_dss_path, df_full_data)
     calc_evap_CMPFW(s_evap_dss_path, df_full_data)
+    # there is two version of the storage data, but they give same values, so maybe we don't need it
+    calc_evap_RLLNS(s_evap_dss_path, df_full_data, s_data_suffix="_I_RLLNS")
+    calc_evap_CMBIE(s_evap_dss_path, df_full_data, s_data_suffix="_I_RLLNS")
+    calc_evap_CMPFW(s_evap_dss_path, df_full_data, s_data_suffix="_I_RLLNS")
 
     df_full_data.to_csv('./Intermediate/feather_yuba_full_gauge_data_wevap.csv')
 
@@ -93,11 +99,18 @@ if __name__ == "__main__":
     
     # extend some with the s-curve disaggregation that depend on rim inflows
     extend_data(df_rim_inflows["I_NFY029"], df_full_data.loc[:, "WILSON_CREEK"], df_extended_data, df_synthetic_data, 1976, 2004, False, 'WILSON_CREEK', i_x_start_year=1922, i_final_year=i_final_year)
-    # this unimpaired depends on WILSON CREEK
+    # these two unimpaired depend on WILSON CREEK
     df_unimpaired_data['11416500'] = unimpaired_11416500(df_full_data, df_extended_data).loc[ti_calculate_range]
+    df_unimpaired_data['11408550'] = unimpaired_11408550(df_full_data, df_extended_data).loc[ti_calculate_range]
+    # 7900 requires data from 8550
+    df_unimpaired_data['11407900'] = unimpaired_11407900(df_full_data, df_unimpaired_data)
+    # 11424000 acrretion requires RLLNS
+    df_unimpaired_data["11424000_ACC"] = unimpaired_11424000_ACC(df_full_data, df_rim_inflows)
     df_pos_unimpaired_data = remove_negatives_timeseries(df_unimpaired_data)
     
     extend_data(df_rim_inflows["I_NFY029"], df_pos_unimpaired_data["11416500"], df_extended_data, df_synthetic_data, 1928, i_final_year, False, '11416500', i_x_start_year=1922, i_final_year=i_final_year)
+    
+    extend_data(df_rim_inflows["I_NFY029"], df_unimpaired_data["11407900"], df_extended_data, df_synthetic_data, 1936, i_final_year, False, '11407900', i_x_start_year=1922, i_final_year=i_final_year, s_strange_sheet="JKSMD")
     
     # # save to csv
     df_extended_data.to_csv('./Intermediate/feather_yuba_extended_data.csv')
@@ -105,6 +118,8 @@ if __name__ == "__main__":
 
     # this function also calculates I_FRNCH
     I_BOWMN(df_extended_data, df_rim_inflows)
+    I_JKSMD(df_extended_data, df_unimpaired_data, df_rim_inflows)
+    I_CMBIE(df_pos_unimpaired_data, df_rim_inflows)
 
     # We have one extra date at the beginning for storage
     df_rim_inflows = df_rim_inflows.loc[ti_calculate_range]

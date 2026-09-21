@@ -167,6 +167,9 @@ def s_curve_disaggregation(df_x_data, df_y_data, i_x_start_year, i_x_end_year, i
 
     if s_strange_sheet == "DEE023":
         df_y_year_totals.drop(index=1967, inplace=True)
+    elif s_strange_sheet == "JKSMD":
+        # excel: Exclude years 1982, 1983, 1984, 1986, 1995, 1996, 1997, 2017 as gage data inconsistent
+        df_y_year_totals.drop(index=[1982, 1983, 1984, 1986, 1995, 1996, 1997, 2017], inplace=True)
     # fit a model and get the slope and intercept
     o_lin_model = LinearRegression()
     o_lin_model.fit(df_x_year_totals.loc[df_y_year_totals.index,], df_y_year_totals)
