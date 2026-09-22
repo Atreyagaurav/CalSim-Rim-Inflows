@@ -998,6 +998,48 @@ def calc_evap_FRNCH(s_dss_file, df_storage_data):
     df_storage_data['FRNCH_evap'] = calculate_evap_data(df_storage_data.loc[:, "11414400_STOR_I_FRNCH"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
 
 
+def calc_evap_FRDYC(s_dss_file, df_storage_data):
+    """
+    Calculate the evaporation amount for FRNCH. Follows the logic in CS3_I_FRDYC_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_FRNCH from 'CS3_ER_FRDYC_rev1.xls
+
+    Parameters
+    ----------
+    s_dss_file: str
+        Path to DSS file with evaporation rates
+    df_storage_data: dataframe
+        Storage data containing the reservoir
+
+    Returns
+    -------
+    None
+    """
+
+    # get the evap rates from the dss file
+    df_evap_rates = read_evap_data(s_dss_file, 'ER_FRDYC')
+
+    # read in the area capacity table
+    df_area_capacity = pd.read_csv(r"./Area Capacities/FRDYC_AC.csv")
+
+    # the sheet already has TAF
+    df_area_capacity['Elevation'] = df_area_capacity['Elevation (ft)']
+    df_area_capacity['Capacity'] = df_area_capacity['Storage (TAF)']
+
+    # fill NAs with zero as the sheet does, this will populate the first row
+    df_area_capacity.iloc[0, :] = df_area_capacity.iloc[0].fillna(0)
+
+    # area already available
+    df_area_capacity['Area'] = df_area_capacity['Area (acres)']
+
+    # again fill first row (lowest elevation) with zeros
+    df_area_capacity.iloc[0, :] = df_area_capacity.iloc[0].fillna(0)
+
+    # make sure the areas are monotonically increasing
+    df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
+
+    # calculate and set the evaporation
+    df_storage_data['FRDYC_evap'] = calculate_evap_data(df_storage_data.loc[:, "11414090_STOR"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
+
+
 def calc_evap_RLLNS(s_dss_file, df_storage_data, s_data_suffix=""):
     """
     Calculate the evaporation amount for RLLNS. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_RLLNS from 'CS3_ER_RLLNS_rev1.xls

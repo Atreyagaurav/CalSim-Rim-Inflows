@@ -33,6 +33,7 @@ if __name__ == "__main__":
     calc_evap_JKSMD_I_NFY029(s_evap_dss_path, df_full_data)
     calc_evap_BOWMN(s_evap_dss_path, df_full_data)
     calc_evap_FRNCH(s_evap_dss_path, df_full_data)
+    calc_evap_FRDYC(s_evap_dss_path, df_full_data)
     calc_evap_RLLNS(s_evap_dss_path, df_full_data)
     calc_evap_CMBIE(s_evap_dss_path, df_full_data)
     calc_evap_CMPFW(s_evap_dss_path, df_full_data)
@@ -52,6 +53,7 @@ if __name__ == "__main__":
     df_unimpaired_data['11409400'] = unimpaired_11409400(df_full_data)
     df_unimpaired_data['11422500'] = unimpaired_11422500(df_full_data)
     df_unimpaired_data['11424000'] = unimpaired_11424000(df_full_data)
+    df_unimpaired_data['11414100'] = unimpaired_11414100(df_full_data)
 
     # drop the first row used for storage
     df_unimpaired_data = df_unimpaired_data.loc[ti_calculate_range,:]
@@ -106,6 +108,9 @@ if __name__ == "__main__":
     df_unimpaired_data['11407900'] = unimpaired_11407900(df_full_data, df_unimpaired_data)
     # 11424000 acrretion requires RLLNS
     df_unimpaired_data["11424000_ACC"] = unimpaired_11424000_ACC(df_full_data, df_rim_inflows)
+    df_unimpaired_data['11408880'] = unimpaired_11408880(df_full_data, df_extended_data)
+    # I_MFY013 calculates it in a different manner
+    df_unimpaired_data['11409000_I_MFY013'] = unimpaired_11409000_I_MFY013(df_full_data, df_extended_data)
     df_pos_unimpaired_data = remove_negatives_timeseries(df_unimpaired_data)
     
     extend_data(df_rim_inflows["I_NFY029"], df_pos_unimpaired_data["11416500"], df_extended_data, df_synthetic_data, 1928, i_final_year, False, '11416500', i_x_start_year=1922, i_final_year=i_final_year)
@@ -120,6 +125,18 @@ if __name__ == "__main__":
     I_BOWMN(df_extended_data, df_rim_inflows)
     I_JKSMD(df_extended_data, df_unimpaired_data, df_rim_inflows)
     I_CMBIE(df_pos_unimpaired_data, df_rim_inflows)
+    
+    # these extension depend on BOWMAN so
+    # three models to extend this station
+    extend_data(df_full_data.loc[:, "11414000"], df_pos_unimpaired_data['11414100'], df_extended_data, df_synthetic_data, 1967, i_final_year, False, '11414100', i_x_start_year=1943, i_final_year=1994)
+    extend_data(df_rim_inflows.loc[:, "I_NFY029"], df_pos_unimpaired_data['11414100'], df_extended_data, df_synthetic_data, 1967, i_final_year, False, '11414100_NFY029', i_x_start_year=1922, i_final_year=2021)
+    extend_data(df_rim_inflows.loc[:, "I_BOWMN"], df_pos_unimpaired_data['11414100'], df_extended_data, df_synthetic_data, 1967, i_final_year, False, '11414100_BOWMN', i_x_start_year=1928, i_final_year=2021)
+    extend_data(df_rim_inflows.loc[:, "I_NFY029"], df_full_data['11414000'], df_extended_data, df_synthetic_data, 1943, i_final_year, False, '11414000_NFY029', i_x_start_year=1922, i_final_year=2021)
+    extend_data(df_rim_inflows.loc[:, "I_BOWMN"], df_full_data['11414000'], df_extended_data, df_synthetic_data, 1943, i_final_year, False, '11414000_BOWMN', i_x_start_year=1928, i_final_year=2021)
+
+    I_FRDYC(df_extended_data, df_pos_unimpaired_data, df_rim_inflows)
+    I_MFY013(df_extended_data, df_pos_unimpaired_data, df_rim_inflows)
+    I_SFY048(df_extended_data, df_full_data, df_rim_inflows)
 
     # We have one extra date at the beginning for storage
     df_rim_inflows = df_rim_inflows.loc[ti_calculate_range]

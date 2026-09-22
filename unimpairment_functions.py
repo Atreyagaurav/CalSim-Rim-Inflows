@@ -1598,6 +1598,80 @@ def unimpaired_11422500(df_full_gauge_data):
     return df_unimp_11422500
 
 
+def unimpaired_11414100(df_full_gauge_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11414100.
+     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    return unimpaired_flows(
+        df_full_gauge_data["11414100"].clip(lower=0),
+        fl_additions = [df_full_gauge_data["FRDYC_evap"]],
+        fl_storages = [df_full_gauge_data["11414090_STOR"]]
+    )
+
+
+def unimpaired_11408880(df_full_gauge_data, df_extended_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11414100.
+     Follows the logic from CS3_I_MFY013_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    return unimpaired_flows(
+        df_full_gauge_data["11408880"],
+        fl_additions = [
+            df_full_gauge_data["11408870"].clip(lower=0).fillna(0),
+            df_full_gauge_data["JKSMD_evap_I_NFY029"].clip(lower=0).fillna(0),
+            (df_full_gauge_data["11408000"] - df_extended_data["WILSON_CREEK"]).clip(lower=0).fillna(0)
+        ],
+        fl_storages = [df_full_gauge_data["11407800_STOR_I_NFY029"].fillna(0)]
+    )
+
+
+def unimpaired_11409000_I_MFY013(df_full_gauge_data, df_extended_data):
+    """
+     Calculate the unimpaired flow from of USGS gage 11414100.
+     Follows the logic from CS3_I_MFY013_Rev2022G.xlsm (??)
+
+     Parameters
+     ----------
+     df_full_gauge_data: dataframe
+       Gauge data that contains the current station and all needed to unimpair the flows. In TAF. This is full dataset
+     Returns
+     -------
+     df_unimpaired: dataframe
+         Unpaired flow for current station
+     """
+    ext_11409000 = df_full_gauge_data["11409000"].fillna(
+        df_full_gauge_data["11410000"] - df_full_gauge_data["11409500"]
+    )
+    return unimpaired_flows(
+        ext_11409000,
+        fl_additions = [
+            df_full_gauge_data["11408870"].clip(lower=0).fillna(0),
+            df_full_gauge_data["JKSMD_evap_I_NFY029"].clip(lower=0).fillna(0),
+            (df_full_gauge_data["11408000"] - df_extended_data["WILSON_CREEK"]).clip(lower=0).fillna(0)
+        ],
+        fl_storages = [df_full_gauge_data["11407800_STOR_I_NFY029"].fillna(0)]
+    )
+
+
 def unimpaired_11424000(df_full_gauge_data):
     """
      Calculate the unimpaired flow from of USGS gage 11424000.
