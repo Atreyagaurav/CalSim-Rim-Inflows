@@ -1380,7 +1380,7 @@ def unimpaired_11409000(df_full_gauge_data):
     )
 
     # only until 1968
-    df_storage = df_full_gauge_data.loc[:, "11407800_STOR_I_NFY029"]
+    df_storage = df_full_gauge_data.loc[:, "11407800_I_NFY029"]
     
     df_unimpaired = unimpaired_flows(
         df_11409000,
@@ -1413,10 +1413,10 @@ def unimpaired_11416500(df_full_gauge_data, df_extended_data):
 
     df_11416500 = df_full_gauge_data.loc[:, "11416500"]
 
-    stor_Bowman = df_full_gauge_data.loc[:, "11415500_STOR"]
-    stor_French = df_full_gauge_data.loc[:, "11414400_STOR_I_BOWMN"]
-    stor_Faucherie = df_full_gauge_data.loc[:, "11414440_STOR_I_BOWMN"]
-    stor_Sawmill = df_full_gauge_data.loc[:, "11414465_STOR_I_BOWMN"]
+    stor_Bowman = df_full_gauge_data.loc[:, "11415500"]
+    stor_French = df_full_gauge_data.loc[:, "11414400_I_BOWMN"]
+    stor_Faucherie = df_full_gauge_data.loc[:, "11414440_I_BOWMN"]
+    stor_Sawmill = df_full_gauge_data.loc[:, "11414465_I_BOWMN"]
     
     evap_Bowman = df_full_gauge_data.loc[:, 'BOWMN_evap']
     evap_French = df_full_gauge_data.loc[:, 'FRNCH_evap']
@@ -1465,7 +1465,7 @@ def unimpaired_11407900(df_full_gauge_data, df_unimpaired_data):
             df_full_gauge_data.loc[:, "JKSMD_evap"].clip(lower=0).fillna(0)
         ],
         fl_storages = [
-            df_full_gauge_data.loc[:, "11407800_STOR"].clip(lower=0).fillna(0)
+            df_full_gauge_data.loc[:, "11407800"].clip(lower=0).fillna(0)
         ],
     )
     df_unimpaired_filled = (df_unimpaired_data["11408550"] * 38.3 / 39.8).fillna(df_unimp_11407900)
@@ -1499,7 +1499,7 @@ def unimpaired_11408550(df_full_gauge_data, df_extended_data):
             df_extended_data.loc[:, "WILSON_CREEK"]
         ],
         fl_storages = [
-            df_full_gauge_data.loc[:, "11407800_STOR"].clip(lower=0).fillna(0)
+            df_full_gauge_data.loc[:, "11407800"].clip(lower=0).fillna(0)
         ],
     )
     return df_unimp_11408550
@@ -1593,7 +1593,7 @@ def unimpaired_11422500(df_full_gauge_data):
             df_full_gauge_data.loc[:, "11426190"]
         ],
         fl_storages = [
-            df_full_gauge_data.loc[:, "11421800_STOR_I_RLLNS"].fillna(0)
+            df_full_gauge_data.loc[:, "11421800_I_RLLNS"].fillna(0)
         ]
     )
     return df_unimp_11422500
@@ -1616,7 +1616,7 @@ def unimpaired_11414100(df_full_gauge_data):
     return unimpaired_flows(
         df_full_gauge_data["11414100"].clip(lower=0),
         fl_additions = [df_full_gauge_data["FRDYC_evap"]],
-        fl_storages = [df_full_gauge_data["11414090_STOR"]]
+        fl_storages = [df_full_gauge_data["11414090"]]
     )
 
 
@@ -1641,7 +1641,7 @@ def unimpaired_11408880(df_full_gauge_data, df_extended_data):
             df_full_gauge_data["JKSMD_evap_I_NFY029"].clip(lower=0).fillna(0),
             (df_full_gauge_data["11408000"] - df_extended_data["WILSON_CREEK"]).clip(lower=0).fillna(0)
         ],
-        fl_storages = [df_full_gauge_data["11407800_STOR_I_NFY029"].fillna(0)]
+        fl_storages = [df_full_gauge_data["11407800_I_NFY029"].fillna(0)]
     )
 
 
@@ -1669,7 +1669,7 @@ def unimpaired_11409000_I_MFY013(df_full_gauge_data, df_extended_data):
             df_full_gauge_data["JKSMD_evap_I_NFY029"].clip(lower=0).fillna(0),
             (df_full_gauge_data["11408000"] - df_extended_data["WILSON_CREEK"]).clip(lower=0).fillna(0)
         ],
-        fl_storages = [df_full_gauge_data["11407800_STOR_I_NFY029"].fillna(0)]
+        fl_storages = [df_full_gauge_data["11407800_I_NFY029"].fillna(0)]
     )
 
 
@@ -1720,9 +1720,9 @@ def unimpaired_11424000(df_full_gauge_data):
             df_full_gauge_data.loc[:, "11426190"]
         ],
         fl_storages = [
-            df_full_gauge_data.loc[:, "LAKE_COMBIE_STOR_I_RLLNS"].fillna(0),
-            df_full_gauge_data.loc[:, "CAMP_FAR_STOR_I_RLLNS"].fillna(0),
-            df_full_gauge_data.loc[:, "11421800_STOR_I_RLLNS"].fillna(0)
+            df_full_gauge_data.loc[:, "LAKE_COMBIE_I_RLLNS"].fillna(0),
+            df_full_gauge_data.loc[:, "CAMP_FAR_I_RLLNS"].fillna(0),
+            df_full_gauge_data.loc[:, "11421800_I_RLLNS"].fillna(0)
         ]
     )
     return df_unimp_11424000
@@ -1763,7 +1763,7 @@ def unimpaired_11424000_ACC(df_full_gauge_data, df_rim_inflows):
             df_full_gauge_data.loc[:, "RLLNS_evap"].clip(lower=0).fillna(0),
         ],
         fl_storages = [
-            df_full_gauge_data.loc[:, "11421800_STOR"].fillna(0),
+            df_full_gauge_data.loc[:, "11421800"].fillna(0),
         ]
     ))
     df_accretion_11424000 = unimpaired_flows(
@@ -1791,8 +1791,8 @@ def unimpaired_11424000_ACC(df_full_gauge_data, df_rim_inflows):
             ).clip(lower=0).fillna(0) + df_full_gauge_data.loc[:, "DC-102"])*0.2*0.85
         ],
         fl_storages = [
-            df_full_gauge_data.loc[:, "LAKE_COMBIE_STOR"].fillna(0),
-            df_full_gauge_data.loc[:, "CAMP_FAR_STOR"].fillna(0),
+            df_full_gauge_data.loc[:, "LAKE_COMBIE"].fillna(0),
+            df_full_gauge_data.loc[:, "CAMP_FAR"].fillna(0),
         ]
     )
     return df_accretion_11424000
