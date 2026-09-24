@@ -2299,8 +2299,8 @@ def I_NFY029(df_extended_data, df_full_gauge_data, df_unimpaired_data, df_rim_in
     # add into the rim inflow dataframe
     df_rim_inflows['I_NFY029'] = df_location
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_NFY029')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1931, 2021+1)), 'I_NFY029')
 
 
 def I_JKSMD(df_extended_data, df_unimpaired_data, df_rim_inflows):
@@ -2332,8 +2332,8 @@ def I_JKSMD(df_extended_data, df_unimpaired_data, df_rim_inflows):
     # add into the rim inflow dataframe
     df_rim_inflows['I_JKSMD'] = df_location
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_JKSMD')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1927, 2021+1)), 'I_JKSMD')
 
 
 
@@ -2367,8 +2367,8 @@ def I_MFY013(df_extended_data, df_unimpaired_data, df_rim_inflows):
     # add into the rim inflow dataframe
     df_rim_inflows['I_MFY013'] = df_location
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_MFY013')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1969, 2021+1)), 'I_MFY013')
 
 
 def I_BOWMN(df_extended_data, df_rim_inflows):
@@ -2399,9 +2399,9 @@ def I_BOWMN(df_extended_data, df_rim_inflows):
     df_rim_inflows['I_BOWMN'] = df_bowmn
     df_rim_inflows['I_FRNCH'] = df_frnch
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_bowmn, list(range(1922, 2021)), 'I_BOWMN')
-    create_final_flow_plots(df_frnch, list(range(1922, 2021)), 'I_FRNCH')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_bowmn, list(range(1928, 2021+1)), 'I_BOWMN')
+    create_final_flow_plots(df_frnch, list(range(1928, 2021+1)), 'I_FRNCH')
 
 
 def I_FRDYC(df_extended_data, df_unimpaired_data, df_rim_inflows):
@@ -2432,8 +2432,8 @@ def I_FRDYC(df_extended_data, df_unimpaired_data, df_rim_inflows):
     # add into the rim inflow dataframe
     df_rim_inflows['I_FRDYC'] = df_location
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_FRDYC')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1967, 2021+1)), 'I_FRDYC')
 
 
 def I_SFY048(df_extended_data, df_full_gauge_data, df_rim_inflows):
@@ -2464,8 +2464,8 @@ def I_SFY048(df_extended_data, df_full_gauge_data, df_rim_inflows):
     # add into the rim inflow dataframe
     df_rim_inflows['I_SFY048'] = df_location
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_SFY048')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non inclusive)
+    create_final_flow_plots(df_location, list(range(1943, 2014+1)), 'I_SFY048')
 
 
 def I_CMBIE(df_extended_data, df_rim_inflows):
@@ -2502,11 +2502,11 @@ def I_CMBIE(df_extended_data, df_rim_inflows):
     df_rim_inflows["I_WLF013"] = df_wlf013
     df_rim_inflows["I_BRR023"] = df_brr023
 
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_CMBIE')
-    create_final_flow_plots(df_cmpfw, list(range(1922, 2021)), 'I_CMPFW')
-    create_final_flow_plots(df_wlf013, list(range(1922, 2021)), 'I_WLF013')
-    create_final_flow_plots(df_brr023, list(range(1922, 2021)), 'I_BRR023')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1965, 2021+1)), 'I_CMBIE')
+    create_final_flow_plots(df_cmpfw, list(range(1965, 2021+1)), 'I_CMPFW')
+    create_final_flow_plots(df_wlf013, list(range(1965, 2021+1)), 'I_WLF013')
+    create_final_flow_plots(df_brr023, list(range(1965, 2021+1)), 'I_BRR023')
 
 
 def I_OGN005(df_unimpaired_data, df_rim_inflows):
@@ -2532,8 +2532,8 @@ def I_OGN005(df_unimpaired_data, df_rim_inflows):
 
     # add into the rim inflow dataframe
     df_rim_inflows['I_OGN005'] = df_location
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_OGN005')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1969, 2021+1)), 'I_OGN005')
 
 
 def I_RLLNS(df_extended_data, df_unimpaired_data, df_rim_inflows):
@@ -2561,5 +2561,5 @@ def I_RLLNS(df_extended_data, df_unimpaired_data, df_rim_inflows):
 
     # add into the rim inflow dataframe
     df_rim_inflows['I_RLLNS'] = df_location
-    # create the plots to compare the observed vs synthetic data
-    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_RLLNS')
+    # create the plots to compare the observed vs synthetic data (+1 as python range is non-inclusive)
+    create_final_flow_plots(df_location, list(range(1965, 2021+1)), 'I_RLLNS')
