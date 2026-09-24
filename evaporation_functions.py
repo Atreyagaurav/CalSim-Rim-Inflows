@@ -869,7 +869,7 @@ def calc_evap_JKSMD_I_NFY029(s_dss_file, df_storage_data):
     df_area_capacity.loc[len(df_area_capacity), ['Capacity', 'Area']] = [71.0, 938]
 
     # calculate and set the evaporation
-    df_storage_data['JKSMD_evap_I_NFY029'] = calculate_evap_data(df_storage_data.loc[:, "11407800_STOR_I_NFY029"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
+    df_storage_data['JKSMD_evap_I_NFY029'] = calculate_evap_data(df_storage_data.loc[:, "11407800_I_NFY029"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
 
 
 def calc_evap_JKSMD(s_dss_file, df_storage_data):
@@ -911,7 +911,7 @@ def calc_evap_JKSMD(s_dss_file, df_storage_data):
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
 
     # calculate and set the evaporation
-    df_storage_data['JKSMD_evap'] = calculate_evap_data(df_storage_data.loc[:, "11407800_STOR"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
+    df_storage_data['JKSMD_evap'] = calculate_evap_data(df_storage_data.loc[:, "11407800"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
 
 
 def calc_evap_BOWMN(s_dss_file, df_storage_data):
@@ -953,7 +953,7 @@ def calc_evap_BOWMN(s_dss_file, df_storage_data):
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
 
     # calculate and set the evaporation
-    df_storage_data['BOWMN_evap'] = calculate_evap_data(df_storage_data.loc[:, "11415500_STOR"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
+    df_storage_data['BOWMN_evap'] = calculate_evap_data(df_storage_data.loc[:, "11415500"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
 
 
 def calc_evap_FRNCH(s_dss_file, df_storage_data):
@@ -995,7 +995,7 @@ def calc_evap_FRNCH(s_dss_file, df_storage_data):
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
 
     # calculate and set the evaporation
-    df_storage_data['FRNCH_evap'] = calculate_evap_data(df_storage_data.loc[:, "11414400_STOR_I_FRNCH"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
+    df_storage_data['FRNCH_evap'] = calculate_evap_data(df_storage_data.loc[:, "11414400_I_FRNCH"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
 
 
 def calc_evap_FRDYC(s_dss_file, df_storage_data):
@@ -1037,7 +1037,7 @@ def calc_evap_FRDYC(s_dss_file, df_storage_data):
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
 
     # calculate and set the evaporation
-    df_storage_data['FRDYC_evap'] = calculate_evap_data(df_storage_data.loc[:, "11414090_STOR"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
+    df_storage_data['FRDYC_evap'] = calculate_evap_data(df_storage_data.loc[:, "11414090"], df_evap_rates, df_area_capacity[['Capacity', 'Area']], b_set_zeros=True)
 
 
 def calc_evap_RLLNS(s_dss_file, df_storage_data, s_data_suffix=""):
@@ -1073,7 +1073,7 @@ def calc_evap_RLLNS(s_dss_file, df_storage_data, s_data_suffix=""):
 
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
     df_storage_data.loc[:, f'RLLNS_evap{s_data_suffix}'] = calculate_evap_data(
-        df_storage_data.loc[:, f"11421800_STOR{s_data_suffix}"],
+        df_storage_data.loc[:, f"11421800{s_data_suffix}"],
         df_evap_rates,
         df_area_capacity[['Capacity', 'Area']],
         b_set_zeros=True
@@ -1118,7 +1118,7 @@ def calc_evap_CMBIE(s_dss_file, df_storage_data, s_data_suffix=""):
     df_area_capacity.loc[len(df_area_capacity), ['Capacity', 'Area']] = [9, 635.7075]
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
     df_storage_data.loc[:, f'CMBIE_evap{s_data_suffix}'] = calculate_evap_data(
-        df_storage_data.loc[:, f"LAKE_COMBIE_STOR{s_data_suffix}"],
+        df_storage_data.loc[:, f"LAKE_COMBIE{s_data_suffix}"],
         df_evap_rates,
         df_area_capacity[['Capacity', 'Area']],
         b_set_zeros=False
@@ -1159,7 +1159,7 @@ def calc_evap_CMPFW(s_dss_file, df_storage_data, s_data_suffix=""):
     df_area_capacity.loc[len(df_area_capacity)-1, ['Capacity', 'Area']] = [125.0, 2050]
     df_area_capacity["Area"] = df_area_capacity["Area"].cummax()
     df_storage_data.loc[:, f'CMPFW_evap{s_data_suffix}'] = calculate_evap_data(
-        df_storage_data.loc[:, f"CAMP_FAR_STOR{s_data_suffix}"],
+        df_storage_data.loc[:, f"CAMP_FAR{s_data_suffix}"],
         df_evap_rates,
         df_area_capacity[['Capacity', 'Area']],
         b_set_zeros=True
