@@ -1362,7 +1362,7 @@ def unimpaired_11333000(df_full_gauge_data):
 def unimpaired_11409000(df_full_gauge_data):
     """
      Calculate the unimpaired flow from of USGS gage 11409000.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_NFY029_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1396,7 +1396,7 @@ def unimpaired_11409000(df_full_gauge_data):
 def unimpaired_11416500(df_full_gauge_data, df_extended_data):
     """
      Calculate the unimpaired flow from of USGS gage 11416500.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_BOWMN_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1507,7 +1507,7 @@ def unimpaired_11408550(df_full_gauge_data, df_extended_data):
 def unimpaired_11409400(df_full_gauge_data):
     """
      Calculate the unimpaired flow from of USGS gage 11409400.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_OGN005_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1533,7 +1533,7 @@ def unimpaired_11409400(df_full_gauge_data):
 def unimpaired_11409400_ext(df_full_gauge_data, df_extended_data, df_unimpaired_data):
     """
      Calculate the unimpaired flow from of USGS gage 11409400 again.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_OGN005_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1563,7 +1563,7 @@ def unimpaired_11409400_ext(df_full_gauge_data, df_extended_data, df_unimpaired_
 def unimpaired_11422500(df_full_gauge_data):
     """
      Calculate the unimpaired flow from of USGS gage 11422500.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_RLLNS_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1601,7 +1601,7 @@ def unimpaired_11422500(df_full_gauge_data):
 def unimpaired_11414100(df_full_gauge_data):
     """
      Calculate the unimpaired flow from of USGS gage 11414100.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_FRDYC_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1621,8 +1621,8 @@ def unimpaired_11414100(df_full_gauge_data):
 
 def unimpaired_11408880(df_full_gauge_data, df_extended_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11414100.
-     Follows the logic from CS3_I_MFY013_Rev2022G.xlsm (??)
+     Calculate the unimpaired flow from of USGS gage 11408880.
+     Follows the logic from CS3_I_MFY013_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1646,8 +1646,8 @@ def unimpaired_11408880(df_full_gauge_data, df_extended_data):
 
 def unimpaired_11409000_I_MFY013(df_full_gauge_data, df_extended_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11414100.
-     Follows the logic from CS3_I_MFY013_Rev2022G.xlsm (??)
+     Calculate the unimpaired flow from of USGS gage 11409000 for I_MFY013.
+     Follows the logic from CS3_I_MFY013_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1675,7 +1675,7 @@ def unimpaired_11409000_I_MFY013(df_full_gauge_data, df_extended_data):
 def unimpaired_11424000(df_full_gauge_data):
     """
      Calculate the unimpaired flow from of USGS gage 11424000.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_SFY048_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1730,7 +1730,7 @@ def unimpaired_11424000(df_full_gauge_data):
 def unimpaired_11424000_ACC(df_full_gauge_data, df_rim_inflows):
     """
      Calculate the unimpaired flow from of USGS gage 11424000.
-     Follows the logic from CS3_I_CMP001_Rev2022G.xlsm (??)
+     Follows the logic from CS3_I_CMBIE_Rev2022G.xlsm
 
      Parameters
      ----------
@@ -1770,6 +1770,10 @@ def unimpaired_11424000_ACC(df_full_gauge_data, df_rim_inflows):
         "a": df_full_gauge_data.loc[:, "11424000"],
         "b": df_full_gauge_data.loc[:, "11423500"] * 1.05 - df_full_gauge_data.loc[:, "CFWID_DIVERSIONS"]
     }).max(axis=1) - df_ext_BearBwRollins,
+        # TODO: df_ext_BearBwRollins has negative values and
+        # unimpaired_flows function removes that, which messes up the
+        # reproduction (moving it here now instead of fl_subtractions,
+        # not sure if -ve is valid)
         fl_additions=[
             df_full_gauge_data.loc[:, "CMPFW_evap"].clip(lower=0).fillna(0),
             df_full_gauge_data.loc[:, "CMBIE_evap"].clip(lower=0).fillna(0),
@@ -1779,11 +1783,8 @@ def unimpaired_11424000_ACC(df_full_gauge_data, df_rim_inflows):
             df_full_gauge_data.loc[:, "TARR_DITCH"].clip(lower=0).fillna(0),
         ],
         fl_subtractions = [
-            # TODO: df_ext_BearBwRollins has negative values and
-            # unimpaired_flows function removes that, which messes up the
-            # reproduction (moving up for now, not sure if -ve is valid)
-            # df_ext_BearBwRollins
             df_DS_CanalSpills,
+            # df_ext_BearBwRollins # see note above
             ((
                 df_full_gauge_data.loc[:, "DC-145"] - df_DS_CanalSpills
             ).clip(lower=0).fillna(0) + df_full_gauge_data.loc[:, "DC-102"])*0.2*0.85

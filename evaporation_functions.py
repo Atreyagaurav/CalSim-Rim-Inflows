@@ -819,7 +819,7 @@ def calc_evap_JNKSN(s_dss_file, df_storage_data):
 
 def calc_evap_JKSMD_I_NFY029(s_dss_file, df_storage_data):
     """
-    Calculate the evaporation amount for Jackson Meadows Reservoir. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_JKSMD from 'CS3_ER_JKSMD_rev1.xls
+    Calculate the evaporation amount for Jackson Meadows Reservoir. Follows the logic in CS3_I_NFY029_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_JKSMD from 'CS3_ER_JKSMD_rev1.xls
 
     Parameters
     ----------
@@ -874,7 +874,7 @@ def calc_evap_JKSMD_I_NFY029(s_dss_file, df_storage_data):
 
 def calc_evap_JKSMD(s_dss_file, df_storage_data):
     """
-    Calculate the evaporation amount for Bowman. Follows the logic in CS3_I_JKSMD_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_JKSMD from 'CS3_ER_JKSMD_rev1.xls
+    Calculate the evaporation amount for Jackson Meadows Reservoir. Follows the logic in CS3_I_JKSMD_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_JKSMD from 'CS3_ER_JKSMD_rev1.xls
 
     Parameters
     ----------
@@ -916,7 +916,7 @@ def calc_evap_JKSMD(s_dss_file, df_storage_data):
 
 def calc_evap_BOWMN(s_dss_file, df_storage_data):
     """
-    Calculate the evaporation amount for Bowman. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_BOWMN from 'CS3_ER_BOWMN_rev1.xls
+    Calculate the evaporation amount for Bowman Lake. Follows the logic in CS3_I_BOWMN_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_BOWMN from 'CS3_ER_BOWMN_rev1.xls
 
     Parameters
     ----------
@@ -958,7 +958,7 @@ def calc_evap_BOWMN(s_dss_file, df_storage_data):
 
 def calc_evap_FRNCH(s_dss_file, df_storage_data):
     """
-    Calculate the evaporation amount for FRNCH. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_FRNCH from 'CS3_ER_FRNCH_rev1.xls
+    Calculate the evaporation amount for French Lake. Follows the logic in CS3_I_BOWMN_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_FRNCH from 'CS3_ER_FRNCH_rev1.xls
 
     Parameters
     ----------
@@ -1000,7 +1000,7 @@ def calc_evap_FRNCH(s_dss_file, df_storage_data):
 
 def calc_evap_FRDYC(s_dss_file, df_storage_data):
     """
-    Calculate the evaporation amount for FRNCH. Follows the logic in CS3_I_FRDYC_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_FRNCH from 'CS3_ER_FRDYC_rev1.xls
+    Calculate the evaporation amount for Fordyce Lake. Follows the logic in CS3_I_FRDYC_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_FRDYC from 'CS3_ER_FRDYC_rev1.xls
 
     Parameters
     ----------
@@ -1042,7 +1042,7 @@ def calc_evap_FRDYC(s_dss_file, df_storage_data):
 
 def calc_evap_RLLNS(s_dss_file, df_storage_data, s_data_suffix=""):
     """
-    Calculate the evaporation amount for RLLNS. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_RLLNS from 'CS3_ER_RLLNS_rev1.xls
+    Calculate the evaporation amount for Rollins Reservoir. Follows the logic in CS3_I_RLLNS_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_RLLNS from 'CS3_ER_RLLNS_rev1.xls
 
     Parameters
     ----------
@@ -1082,7 +1082,7 @@ def calc_evap_RLLNS(s_dss_file, df_storage_data, s_data_suffix=""):
 
 def calc_evap_CMBIE(s_dss_file, df_storage_data, s_data_suffix=""):
     """
-    Calculate the evaporation amount for CMBIE. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_CMBIE from 'CS3_ER_CMBIE_rev1.xls
+    Calculate the evaporation amount for Combie Reservoir. Follows the logic in CS3_I_CMBIE_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_CMBIE from 'CS3_ER_CMBIE_rev1.xls
 
     Parameters
     ----------
@@ -1127,7 +1127,7 @@ def calc_evap_CMBIE(s_dss_file, df_storage_data, s_data_suffix=""):
 
 def calc_evap_CMPFW(s_dss_file, df_storage_data, s_data_suffix=""):
     """
-    Calculate the evaporation amount for CMPFW. Follows the logic in CS3_I_CMP001_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_CMPFW from 'CS3_ER_CMPFW_rev1.xls
+    Calculate the evaporation amount for Camp Far West Reservoir. Follows the logic in CS3_I_CMBIE_Rev2022G. Updated to WY21 using calibrated evaporation rate ER_CMPFW from 'CS3_ER_CMPFW_rev1.xls
 
     Parameters
     ----------

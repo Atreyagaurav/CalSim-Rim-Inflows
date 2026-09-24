@@ -2272,6 +2272,8 @@ def I_NFY029(df_extended_data, df_full_gauge_data, df_unimpaired_data, df_rim_in
     ----------
     df_extended_data: dataframe
         Dataframe of the extended data to pull from
+    df_full_gauge_data: dataframe
+        Dataframe of the gage data to pull from
     df_unimpaired_data: dataframe
         Dataframe of the unimpaired data to pull from
     df_rim_inflows: dataframe
@@ -2410,6 +2412,8 @@ def I_FRDYC(df_extended_data, df_unimpaired_data, df_rim_inflows):
     ----------
     df_extended_data: dataframe
         Dataframe of the extended data to pull from
+    df_unimpaired_data: dataframe
+        Dataframe of the unimpaired data to pull from
     df_rim_inflows: dataframe
         Dataframe of rim inflows that have been calculated already
 
