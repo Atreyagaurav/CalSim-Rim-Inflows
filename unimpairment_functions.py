@@ -1361,7 +1361,8 @@ def unimpaired_11333000(df_full_gauge_data):
 
 def unimpaired_11409000(df_full_gauge_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11409000.
+     Calculate the unimpaired flow for USGS 11409000 M YUBA R AB OREGON C NR NORTH SAN JUAN CA
+.
      Follows the logic from CS3_I_NFY029_Rev2022G.xlsm
 
      Parameters
@@ -1395,7 +1396,7 @@ def unimpaired_11409000(df_full_gauge_data):
 
 def unimpaired_11416500(df_full_gauge_data, df_extended_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11416500.
+     Calculate the unimpaired flow for USGS 11416500 CANYON C BL BOWMAN LK CA
      Follows the logic from CS3_I_BOWMN_Rev2022G.xlsm
 
      Parameters
@@ -1444,7 +1445,7 @@ def unimpaired_11416500(df_full_gauge_data, df_extended_data):
 
 def unimpaired_11407900(df_full_gauge_data, df_unimpaired_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11407900.
+     Calculate the unimpaired flow for USGS 11407900 M YUBA R BL JACKSON MDWS DAM NR SIERRA CITY CA.
      Follows the logic from CS3_I_JKSMD_Rev2022G.xlsm
 
      Parameters
@@ -1473,7 +1474,7 @@ def unimpaired_11407900(df_full_gauge_data, df_unimpaired_data):
 
 def unimpaired_11408550(df_full_gauge_data, df_extended_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11408550.
+     Calculate the unimpaired flow for USGS 11408550 M YUBA R BL MILTON DAM CA
      Follows the logic from CS3_I_JKSMD_Rev2022G.xlsm
 
      Parameters
@@ -1506,7 +1507,7 @@ def unimpaired_11408550(df_full_gauge_data, df_extended_data):
 
 def unimpaired_11409400(df_full_gauge_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11409400.
+     Calculate the unimpaired flow for USGS 11409400 OREGON C BL LOG CABIN DAM NR CAMPTONVILLE CA
      Follows the logic from CS3_I_OGN005_Rev2022G.xlsm
 
      Parameters
@@ -1532,7 +1533,7 @@ def unimpaired_11409400(df_full_gauge_data):
 
 def unimpaired_11409400_ext(df_full_gauge_data, df_extended_data, df_unimpaired_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11409400 again.
+     Calculate the extended unimpaired flow for USGS 11409400 OREGON C BL LOG CABIN DAM NR CAMPTONVILLE CA
      Follows the logic from CS3_I_OGN005_Rev2022G.xlsm
 
      Parameters
@@ -1562,7 +1563,7 @@ def unimpaired_11409400_ext(df_full_gauge_data, df_extended_data, df_unimpaired_
 
 def unimpaired_11422500(df_full_gauge_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11422500.
+     Calculate the unimpaired flow for USGS 11422500 BEAR R BL ROLLINS DAM NR COLFAX CA
      Follows the logic from CS3_I_RLLNS_Rev2022G.xlsm
 
      Parameters
@@ -1600,7 +1601,7 @@ def unimpaired_11422500(df_full_gauge_data):
 
 def unimpaired_11414100(df_full_gauge_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11414100.
+     Calculate the unimpaired flow for USGS 11414100 FORDYCE C BL FORDYCE DAM NR CISCO CA
      Follows the logic from CS3_I_FRDYC_Rev2022G.xlsm
 
      Parameters
@@ -1621,7 +1622,7 @@ def unimpaired_11414100(df_full_gauge_data):
 
 def unimpaired_11408880(df_full_gauge_data, df_extended_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11408880.
+     Calculate the unimpaired flow for USGS 11408880 M YUBA R BL OUR HOUSE DAM CA
      Follows the logic from CS3_I_MFY013_Rev2022G.xlsm
 
      Parameters
@@ -1646,7 +1647,7 @@ def unimpaired_11408880(df_full_gauge_data, df_extended_data):
 
 def unimpaired_11409000_I_MFY013(df_full_gauge_data, df_extended_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11409000 for I_MFY013.
+     Calculate the unimpaired flow using I_MFY013 sheet for USGS 11409000 M YUBA R AB OREGON C NR NORTH SAN JUAN CA
      Follows the logic from CS3_I_MFY013_Rev2022G.xlsm
 
      Parameters
@@ -1674,7 +1675,7 @@ def unimpaired_11409000_I_MFY013(df_full_gauge_data, df_extended_data):
 
 def unimpaired_11424000(df_full_gauge_data):
     """
-     Calculate the unimpaired flow from of USGS gage 11424000.
+     Calculate the unimpaired flow for USGS 11424000 BEAR R NR WHEATLAND CA
      Follows the logic from CS3_I_SFY048_Rev2022G.xlsm
 
      Parameters
@@ -1729,7 +1730,7 @@ def unimpaired_11424000(df_full_gauge_data):
 
 def unimpaired_11424000_ACC(df_full_gauge_data, df_rim_inflows):
     """
-     Calculate the unimpaired flow from of USGS gage 11424000.
+     Calculate the unimpaired flow (accretion) for USGS 11424000 BEAR R NR WHEATLAND CA
      Follows the logic from CS3_I_CMBIE_Rev2022G.xlsm
 
      Parameters
