@@ -2272,6 +2272,8 @@ def I_NFY029(df_extended_data, df_full_gauge_data, df_unimpaired_data, df_rim_in
     ----------
     df_extended_data: dataframe
         Dataframe of the extended data to pull from
+    df_full_gauge_data: dataframe
+        Dataframe of the gage data to pull from
     df_unimpaired_data: dataframe
         Dataframe of the unimpaired data to pull from
     df_rim_inflows: dataframe
@@ -2299,6 +2301,74 @@ def I_NFY029(df_extended_data, df_full_gauge_data, df_unimpaired_data, df_rim_in
 
     # create the plots to compare the observed vs synthetic data
     create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_NFY029')
+
+
+def I_JKSMD(df_extended_data, df_unimpaired_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_JKSMD
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_unimpaired_data: dataframe
+        Dataframe of the unimpaired data to pull from
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    df_location = df_extended_data["11407900"]
+    df_location.loc["1926-10":"1934-09"] = df_unimpaired_data.loc["1926-10":"1934-09", "11407900"]
+
+    # round to 2 decimals
+    df_location = df_location.round(2)
+
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_JKSMD'] = df_location
+
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_JKSMD')
+
+
+
+def I_MFY013(df_extended_data, df_unimpaired_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_MFY013
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_unimpaired_data: dataframe
+        Dataframe of the unimpaired data to pull from
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    df_total = df_unimpaired_data["11408880"].copy(deep=True)
+    df_total.loc[:"1968-09"] = df_unimpaired_data.loc[:"1968-09", "11409000_I_MFY013"] * 0.95
+
+    df_location = df_total - df_rim_inflows["I_JKSMD"]
+    # round to 2 decimals
+    df_location = df_location.round(2)
+
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_MFY013'] = df_location
+
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1938, 2021)), 'I_MFY013')
 
 
 def I_BOWMN(df_extended_data, df_rim_inflows):
@@ -2332,6 +2402,111 @@ def I_BOWMN(df_extended_data, df_rim_inflows):
     # create the plots to compare the observed vs synthetic data
     create_final_flow_plots(df_bowmn, list(range(1922, 2021)), 'I_BOWMN')
     create_final_flow_plots(df_frnch, list(range(1922, 2021)), 'I_FRNCH')
+
+
+def I_FRDYC(df_extended_data, df_unimpaired_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_FRDYC
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_unimpaired_data: dataframe
+        Dataframe of the unimpaired data to pull from
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    df_location = df_extended_data["11414100"].fillna(df_unimpaired_data["11414100"])
+    df_location.loc[:"1927-09"] = df_extended_data.loc[:"1927-09", "11414100_NFY029"]
+    df_location.loc["1927-10":"1943-09"] = df_extended_data.loc["1927-10":"1943-09", "11414100_BOWMN"]
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+    # round to 2 decimals
+    df_location = df_location.round(2)
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_FRDYC'] = df_location
+
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_FRDYC')
+
+
+def I_SFY048(df_extended_data, df_full_gauge_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_SFY048
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_full_gauge_data: dataframe
+        Dataframe of gauge data
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    df_location = df_full_gauge_data["11414000"].copy(deep=True)
+    df_location.loc[:"1927-09"] = df_extended_data.loc[:"1927-09", "11414000_NFY029"]
+    df_location.loc["1927-10":"1942-09"] = df_extended_data.loc["1927-10":"1942-09", "11414000_BOWMN"]
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+    # round to 2 decimals
+    df_location = df_location.round(2)
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_SFY048'] = df_location
+
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_SFY048')
+
+
+def I_CMBIE(df_extended_data, df_rim_inflows):
+    """
+    Calculate the final rim inflow for CalSim. Location: I_CMBIE
+
+    Parameters
+    ----------
+    df_extended_data: dataframe
+        Dataframe of the extended data to pull from
+    df_rim_inflows: dataframe
+        Dataframe of rim inflows that have been calculated already
+
+    Returns
+    -------
+    None
+    """
+    df_location = df_extended_data["11424000_ACC"] * 0.187349385543012
+    # set anything negative to zero.
+    df_location.loc[df_location < 0] = 0
+    # round to 2 decimals
+    df_location = df_location.round(2)
+
+    # add into the rim inflow dataframe
+    df_rim_inflows['I_CMBIE'] = df_location
+
+    df_cmpfw = df_extended_data["11424000_ACC"] * 0.09673072884898
+    df_cmpfw = df_cmpfw.round(2)
+    df_wlf013 = df_extended_data["11424000_ACC"] * 0.117849250552461
+    df_wlf013 = df_wlf013.round(2)
+    df_brr023 = df_extended_data["11424000_ACC"] * 0.569550131490796
+    df_brr023 = df_brr023.round(2)
+    df_rim_inflows["I_CMPFW"] = df_cmpfw
+    df_rim_inflows["I_WLF013"] = df_wlf013
+    df_rim_inflows["I_BRR023"] = df_brr023
+
+    # create the plots to compare the observed vs synthetic data
+    create_final_flow_plots(df_location, list(range(1922, 2021)), 'I_CMBIE')
+    create_final_flow_plots(df_cmpfw, list(range(1922, 2021)), 'I_CMPFW')
+    create_final_flow_plots(df_wlf013, list(range(1922, 2021)), 'I_WLF013')
+    create_final_flow_plots(df_brr023, list(range(1922, 2021)), 'I_BRR023')
 
 
 def I_OGN005(df_unimpaired_data, df_rim_inflows):

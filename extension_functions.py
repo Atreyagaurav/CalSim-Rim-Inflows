@@ -12,6 +12,27 @@ import os
 
 
 def vba_like_factor_calc_I_RLLNS(df_xcum, dl_tcum, dl_scum):
+    """Generates cumulative proprotions of the data to fill for
+    s_curve_disaggregation by replicating the bug in the excel
+    VBA. The VBA line `If (TNCUM(K) <= TCUM(N)) Or (TNCUM(K) + N =
+    14)` assumed the final cumulative proportion is always 1, but in
+    cases due to negative values it is higher than 1, and that results
+    in VBA code skipping this IF condition and using the values from
+    last loop silently. This function replicates that for I_RLLNS
+
+    Parameters
+    ----------
+    df_xcum: pd.DataFrame
+        Cumulative proportions of the x values (reference data) for each water year (rows) and months (columns)
+    df_tcum: pd.Series
+        Cumulative proportions of the x values (reference data) for each month over the period
+    df_scum: pd.Series
+        Cumulative proportions of the y values (location data) for each month over the period
+    Returns
+    -------
+    df_ycum: pd.DataFrame
+        Cumulative proportions of the y values (location data) for each water year (rows) and months (columns)
+    """
     df_sncum = np.empty_like(df_xcum)
     dl_prev_sncum = np.array([np.nan for _ in  range(df_xcum.shape[1])])
     for i_row in range(df_xcum.shape[0]):
@@ -167,6 +188,9 @@ def s_curve_disaggregation(df_x_data, df_y_data, i_x_start_year, i_x_end_year, i
 
     if s_strange_sheet == "DEE023":
         df_y_year_totals.drop(index=1967, inplace=True)
+    elif s_strange_sheet == "JKSMD":
+        # excel: Exclude years 1982, 1983, 1984, 1986, 1995, 1996, 1997, 2017 as gage data inconsistent
+        df_y_year_totals.drop(index=[1982, 1983, 1984, 1986, 1995, 1996, 1997, 2017], inplace=True)
     # fit a model and get the slope and intercept
     o_lin_model = LinearRegression()
     o_lin_model.fit(df_x_year_totals.loc[df_y_year_totals.index,], df_y_year_totals)
